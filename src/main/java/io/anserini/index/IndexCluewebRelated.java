@@ -105,16 +105,16 @@ public final class IndexCluewebRelated {
   private void readValues() throws IOException, InterruptedException {
     Thread thread1 = new Thread(readWebGraphRunnable);
     thread1.start();
-    thread1.join();
     
     Thread thread2 = new Thread(readPagerankScoresRunnable);
     thread2.start();
-    thread2.join();
   
     Thread thread3 = new Thread(readSpamScoresRunnable);
     thread3.start();
+  
+    thread1.join();
+    thread2.join();
     thread3.join();
-    
   }
   
   Runnable readWebGraphRunnable = new Runnable() {
