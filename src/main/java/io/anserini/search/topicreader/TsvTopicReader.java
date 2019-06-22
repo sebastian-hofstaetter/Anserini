@@ -1,5 +1,5 @@
 /**
- * Anserini: A toolkit for reproducible information retrieval research built on Lucene
+ * Anserini: A Lucene toolkit for replicable information retrieval research
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,33 +23,39 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+/**
+ * Topic reader for queries in tsv format, such as the MS MARCO queries.
+ *
+ * <pre>
+ * 174249 does xpress bet charge to deposit money in your account
+ * 320792 how much is a cost to run disneyland
+ * 1090270  botulinum definition
+ * 1101279	do physicians pay for insurance from their salaries?
+ * 201376 here there be dragons comic
+ * 54544  blood diseases that are sexually transmitted
+ * ...
+ * </pre>
+ */
 public class TsvTopicReader extends TopicReader {
-
   public TsvTopicReader(Path topicFile) {
     super(topicFile);
   }
 
   @Override
-  public SortedMap<Integer, Map<String, String>> read(BufferedReader bRdr) throws IOException {
+  public SortedMap<Integer, Map<String, String>> read(BufferedReader reader) throws IOException {
     SortedMap<Integer, Map<String, String>> map = new TreeMap<>();
 
     String line;
-    while ((line = bRdr.readLine()) != null) {
-   
-      String[] line_split = line.split("\t");
-
-      if(line_split.length != 2){
-        throw new IOException(".tsv file has the wrong file format:"+line_split.length +" for: "+line);
-      }
+    while ((line = reader.readLine()) != null) {
+      line = line.trim();
+      String[] arr = line.split("\\t");
 
       Map<String,String> fields = new HashMap<>();
-      fields.put("title", line_split[1]);
-      map.put(Integer.valueOf(line_split[0]), fields);
-
+      fields.put("title", arr[1].trim());
+      map.put(Integer.valueOf(arr[0]), fields);
     }
+
     return map;
   }
 }

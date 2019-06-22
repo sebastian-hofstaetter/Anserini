@@ -1,5 +1,5 @@
 /**
- * Anserini: A toolkit for reproducible information retrieval research built on Lucene
+ * Anserini: A Lucene toolkit for replicable information retrieval research
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 public class TrecDocumentTest extends DocumentTest {
 
   @Before
@@ -35,7 +34,7 @@ public class TrecDocumentTest extends DocumentTest {
         "<FILEID>field id test and should NOT be included</FILEID>\n" +
         "<FIRST>first test and should NOT be included</FIRST>\n" +
         "<SECOND>second test and should NOT be included</SECOND>\n" +
-        "<HEAD>This is head and should NOT be included</HEAD>\n" +
+        "<HEAD>This is head and should be included</HEAD>\n" +
         "<HEADLINE>This is headline and should be included</HEADLINE>\n" +
         "<DATELINE>AP</DATELINE>\n" +
         "<TEXT>\n" +
@@ -51,7 +50,7 @@ public class TrecDocumentTest extends DocumentTest {
     doc1.put("id", "AP-0001");
     // ONLY "<TEXT>", "<HEADLINE>", "<TITLE>", "<HL>", "<HEAD>",
     // "<TTL>", "<DD>", "<DATE>", "<LP>", "<LEADPARA>" will be included
-    doc1.put("content", "<HEAD>This is head and should NOT be included</HEAD>\n" +
+    doc1.put("content", "<HEAD>This is head and should be included</HEAD>\n" +
         "<HEADLINE>This is headline and should be included</HEADLINE>\n" +
         "<TEXT>\n" +
         "Hopefully we\n" +

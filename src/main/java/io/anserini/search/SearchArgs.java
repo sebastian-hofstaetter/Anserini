@@ -1,5 +1,5 @@
 /**
- * Anserini: A toolkit for reproducible information retrieval research built on Lucene
+ * Anserini: A Lucene toolkit for replicable information retrieval research
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,16 +92,14 @@ public class SearchArgs {
 
   @Option(name = "-mu", handler = StringArrayOptionHandler.class, usage = "Dirichlet smoothing parameter")
   public String[] mu = new String[] {"1000"};
-  /*
-   * Why this value? We want to pick a value that corresponds to what the community generally
-   * considers to "good". Zhai and Lafferty (SIGIR 2001) write "the optimal value of mu appears to
-   * have a wide range (500-10000) and usually is around 2,000. A large value is 'safer,' especially
-   * for long verbose queries." We might consider additional evidence from TREC papers: the UMass
-   * TREC overview papers from 2002 and 2003 don't specifically mention query-likelihood as a
-   * retrieval model. The UMass overview paper from TREC 2004 mentions setting mu to 1000;
-   * incidentally, this is the first mention of what the community would later call RM3. So, this
-   * setting seems reasonable and does not contradict Zhai and Lafferty.
-   */
+
+  // Why this value? We want to pick a value that corresponds to what the community generally considers to be "good".
+  // Zhai and Lafferty (SIGIR 2001) write "the optimal value of mu appears to have a wide range (500-10000) and
+  // usually is around 2,000. A large value is 'safer', especially for long verbose queries." We might consider
+  // additional evidence from TREC papers: the UMass TREC overview papers from 2002 and 2003 don't specifically
+  // mention query-likelihood as a retrieval model. The UMass overview paper from TREC 2004 mentions setting mu
+  // to 1000; incidentally, this is the first mention of what the community would later call RM3. So, this setting
+  // seems reasonable and does not contradict Zhai and Lafferty.
 
   @Option(name = "-qld", usage = "use query likelihood Dirichlet scoring model")
   public boolean qld = false;
@@ -115,17 +113,24 @@ public class SearchArgs {
   @Option(name = "-bm25", usage = "use BM25 scoring model")
   public boolean bm25 = false;
 
+  // BM25 parameters: Robertson et al. (TREC 4) propose the range of 1.0-2.0 for k1 and 0.6-0.75 for b, with k1 = 1.2
+  // and b = 0.75 being a very common setting. Empirically, these values don't work very well for modern collections.
+  // Here, we adopt the defaults recommended by Trotman et al. (SIGIR 2012 OSIR Workshop) of k1 = 0.9 and b = 0.4.
+  // These values come from tuning on the INEX 2008 Wikipedia collection, which is less commonly used, so there isn't
+  // the danger of (inadvertently) training on test data. These settings are used in the ATIRE system and also in
+  // Lin et al. (ECIR 2016).
+
   @Option(name = "-k1", handler = StringArrayOptionHandler.class, usage = "BM25 k1 parameter")
   public String[] k1 = new String[] {"0.9"};
 
   @Option(name = "-b", handler = StringArrayOptionHandler.class, usage = "BM25 b parameter")
   public String[] b = new String[] {"0.4"};
   
-  @Option(name = "-pl2", usage = "use PL2 scoring model")
-  public boolean pl2 = false;
+  @Option(name = "-inl2", usage = "use I(n)L2 scoring model")
+  public boolean inl2 = false;
   
-  @Option(name = "-pl2.c", metaVar = "[value]", usage = "PL2 c parameter")
-  public String[] pl2_c = new String[] {"0.1"};
+  @Option(name = "-inl2.c", metaVar = "[value]", usage = "I(n)L2 c parameter")
+  public String[] inl2_c = new String[] {"0.1"};
 
   @Option(name = "-spl", usage = "use SPL scoring model")
   public boolean spl = false;
@@ -195,8 +200,8 @@ public class SearchArgs {
   @Option(name = "-axiom.deterministic", usage = "make the expansion terms axiomatic reranking results deterministic")
   public boolean axiom_deterministic = false;
 
-  @Option(name = "-axiom.seed", metaVar = "[number]", usage = "seed for the random generator in axiomatic reranking")
-  public long axiom_seed = 42L;
+  @Option(name = "-axiom.seed", handler = StringArrayOptionHandler.class, usage = "seed for the random generator in axiomatic reranking")
+  public String[] axiom_seed = new String[] {"42"};
 
   @Option(name = "-axiom.docids", usage = "sorted docids file that for deterministic reranking. this file can be obtained " +
           "by running CLI command `IndexUtils -index /path/to/index -dumpAllDocids GZ`")
@@ -219,4 +224,7 @@ public class SearchArgs {
 
   @Option(name = "-model", metaVar = "[file]", required = false, usage = "ranklib model file")
   public String model = "";
+
+  @Option(name = "-qid_queries", metaVar = "[file]", usage="query id - query mapping file")
+  public String qid_queries = "";
 }

@@ -1,5 +1,5 @@
 /**
- * Anserini: A toolkit for reproducible information retrieval research built on Lucene
+ * Anserini: A Lucene toolkit for replicable information retrieval research
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,16 @@ package io.anserini.collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+// A file in a JsonCollection can either be:
+// (1) A single JSON object (i.e., a single document)
+// (2) An array of JSON objects
+// (3) JSON Lines (i.e., one JSON object per line)
+//
+// This is the test case for (2)
 public class JsonDocumentArrayTest extends DocumentTest {
 
   @Before
